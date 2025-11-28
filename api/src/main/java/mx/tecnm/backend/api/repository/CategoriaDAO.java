@@ -21,4 +21,30 @@ public class CategoriaDAO {
                 .list();
     }
 
+    public Categoria obtenerCategoriaPorId(int id) {
+        String sql = "SELECT id, nombre FROM categorias WHERE id = ?";
+        return jdbcClient.sql(sql)
+                .param(id)
+                .query(new CategoriaRM())
+                .single();
+    }
+
+    public Categoria crearCategoria(String nuevaCategoria) {
+        String sql = "INSERT INTO categorias (nombre) VALUES (?) RETURNING id, nombre";
+        return jdbcClient.sql(sql)
+                .param(nuevaCategoria)
+                .query(new CategoriaRM())
+                .single();
+    }
+
+    
+    public Categoria actualizarCategoria(int id, String nuevoNombre) {
+        String sql = "UPDATE categorias SET nombre = ? WHERE id = ? RETURNING id, nombre";
+        
+        return jdbcClient.sql(sql)
+                .param(nuevoNombre)
+                .param(id)
+                .query(new CategoriaRM())
+                .single();
+    }
 }
