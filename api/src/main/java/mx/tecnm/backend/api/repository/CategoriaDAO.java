@@ -1,11 +1,9 @@
 package mx.tecnm.backend.api.repository;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-
 import mx.tecnm.backend.api.models.Categoria;
 
 @Repository
@@ -29,22 +27,27 @@ public class CategoriaDAO {
                 .single();
     }
 
-    public Categoria crearCategoria(String nuevaCategoria) {
+    public Categoria crearCategoria(String nombre) {
         String sql = "INSERT INTO categorias (nombre) VALUES (?) RETURNING id, nombre";
         return jdbcClient.sql(sql)
-                .param(nuevaCategoria)
+                .param(nombre)
                 .query(new CategoriaRM())
                 .single();
     }
 
-    
-    public Categoria actualizarCategoria(int id, String nuevoNombre) {
+    public Categoria actualizarCategoria(int id, String nombre) {
         String sql = "UPDATE categorias SET nombre = ? WHERE id = ? RETURNING id, nombre";
-        
         return jdbcClient.sql(sql)
-                .param(nuevoNombre)
+                .param(nombre)
                 .param(id)
                 .query(new CategoriaRM())
                 .single();
+    }
+
+    public void eliminarCategoria(int id) {
+        String sql = "DELETE FROM categorias WHERE id = ?";
+        jdbcClient.sql(sql)
+                .param(id)
+                .update();
     }
 }
